@@ -1,10 +1,12 @@
 /* global UverseNg */
 
-UverseNg.directive('tileFlyout', function(){
+UverseNg.directive('flyout', function(){
 	return {
 		require: ['ngModel']
+		, restrict: 'E'
+		, replace: true
 		, transclude: true
-		, templateUrl: 'tileFlyout.html'
+		, templateUrl: 'flyout.html'
 
 		, link: function(scope, elem, attrs, ngModel) {
 
