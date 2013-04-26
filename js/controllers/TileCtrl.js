@@ -9,6 +9,7 @@ UverseNg.controller('TileCtrl', [
 	, function($scope, $timeout, TileResource) {
 		$scope.currentPage = 0;
 		$scope.perPage = 4;
+		$scope.pages = 0;
 		$scope.entitlementLevel = null;
 		$scope.signedIn = false;
 
@@ -16,12 +17,36 @@ UverseNg.controller('TileCtrl', [
 			return parseInt(str.replace(/[^\d]+/, ''), 10) || 0;
 		};
 
-		var res = TileResource.get(1500).then(function(data) {
+		$scope.pizzles = function() {
+			var tiles = $scope.tiles
+			, pages = []
+			, prev = 0
+			, per = $scope.perPage;
+
+			for (var i = per, len = tiles.length + 1; i < len; i += $scope.perPage) {
+				pages.push(tiles.slice(prev, i));
+				prev += $scope.perPage;
+			}
+
+			return pages;
+		};
+
+		var watchTiles = function(){
+			if (!$scope.tiles) return;
+
+			$scope.$watch(function(){
+				return $scope.tiles.length;
+			}, function(length){
+				$scope.pages = Math.ceil($scope.tiles.length / $scope.perPage);
+			});
+		};
+
+		var res = TileResource.get(1).then(function(data) {
 			$scope.tiles = data;
 		});
 
 		res.then(function(){
-			$scope.pages = $scope.tiles.length / $scope.perPage;
+			watchTiles();
 		});
 
 		$scope.tileBg = function() {
@@ -65,7 +90,12 @@ UverseNg.controller('TileCtrl', [
 
 			tile.justAdded = true;
 
-			$scope.tiles.splice(position, 0, tile);
+			if (position === -1) {
+				$scope.tiles.push(tile);
+			} else {
+				position = position < -1 ? position + 1 : position;
+				$scope.tiles.splice(position, 0, tile);
+			}
 
 			$timeout(function(){
 				tile.justAdded = false;
