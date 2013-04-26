@@ -23,7 +23,7 @@
     <!-- This code is taken from http://twitter.github.com/bootstrap/examples/hero.html -->
 
     <script type="text/ng-template" id="flyout.html">
-      <article class="flyout" ng-show="tile.flyoutVisible">
+      <article class="flyout" fade-show="tile.flyoutVisible" duration="300">
         <h2 class="flyout-title" ng-bind="tile.title"></h2>
         <p class="flyout-body clearfix">
           <span class="left-body">
@@ -59,17 +59,25 @@
             <ul class="nav">
               <li ng-class="{'active': entitlementLevel == 'U100'}">
                 <a href="#"
-                  ng-click="authenticate(true, 'U100')">Sign in as U-100</a>
+                  ng-click="authenticate($event, true, 'U100')">Sign in as U-100</a>
               </li>
               <li ng-class="{'active': entitlementLevel == 'U450'}">
-                <a href="#about"
-                  ng-click="authenticate(true, 'U450')">Sign in as U-450</a>
+                <a href="#"
+                  ng-click="authenticate($event, true, 'U450')">Sign in as U-450</a>
               </li>
               <li ng-class="{'active': entitlementLevel == null}">
-                <a href="#contact"
-                  ng-click="authenticate(false, null)">Sign out</a>
+                <a href="#"
+                  ng-click="authenticate($event, false, null)">Sign out</a>
               </li>
             </ul>
+            <div class="navbar-form">
+              <button class="btn" ng-click="addRandomTile()">Add tile</button>
+              <span>to</span>
+              <input type="number" ng-model="tilePosition" placeholder="Index position">
+            </div>
+            <div class="navbar-form">
+              <input type="text" placeholder="Search" ng-model="searchTiles">
+            </div>
           </div><!--/.nav-collapse -->
         </div>
       </div>
@@ -78,8 +86,13 @@
     <div class="container">
 
       <div class="row">
-        <div class="span4 tile" ng-repeat="tile in tiles" ng-click="tile.flyoutVisible = !tile.flyoutVisible">
-          <figure class="tile-art" ng-style="{backgroundImage: tileBg()}"></figure>
+        <div class="span4 tile ng-cloak" ng-repeat="tile in tiles | filter: searchTiles | startFrom: currentPage * perPage | limitTo: perPage" ng-click="tile.flyoutVisible = !tile.flyoutVisible;">
+          <div class="just-added" fade-show="tile.justAdded" duration="2500">
+            <div class="just-added-wrapper">
+              <span>NEW TILE!</span>
+            </div>
+          </div>
+          <figure class="tile-art" ng-style="{backgroundImage: tileBg()}" ng-click="logIndex($event)"></figure>
           <figcaption class="meta clearfix">
             <span ng-bind='tile.genres[0]'></span>
             <span ng-bind='tile.type'></span>
@@ -88,6 +101,16 @@
           </figcaption>
           <flyout ng-model="tile"></flyout>
         </div>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn"
+          ng-click="currentPage = currentPage - 1"
+          ng-disabled="currentPage == 0">Prev</button>
+
+        <button class="btn"
+          ng-click="currentPage = currentPage + 1"
+          ng-disabled="currentPage == pages - 1">Next</button>
       </div>
 
       <hr>

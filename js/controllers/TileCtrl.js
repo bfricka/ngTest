@@ -1,11 +1,14 @@
-/* global UverseNg */
+/* global UverseNg, angular */
 
 // Define a tile controller and inject its dependencies
 UverseNg.controller('TileCtrl', [
 	'$scope'
+	,'$timeout'
 	, 'TileResource'
 
-	, function($scope, TileResource) {
+	, function($scope, $timeout, TileResource) {
+		$scope.currentPage = 0;
+		$scope.perPage = 4;
 		$scope.entitlementLevel = null;
 		$scope.signedIn = false;
 
@@ -13,8 +16,12 @@ UverseNg.controller('TileCtrl', [
 			return parseInt(str.replace(/[^\d]+/, ''), 10) || 0;
 		};
 
-		TileResource.get(1).then(function(data) {
+		var res = TileResource.get(1500).then(function(data) {
 			$scope.tiles = data;
+		});
+
+		res.then(function(){
+			$scope.pages = $scope.tiles.length / $scope.perPage;
 		});
 
 		$scope.tileBg = function() {
@@ -43,9 +50,31 @@ UverseNg.controller('TileCtrl', [
 			return false;
 		};
 
-		$scope.authenticate = function(signedIn, level) {
+		$scope.authenticate = function(e, signedIn, level) {
+			e.preventDefault();
+
 			$scope.signedIn = signedIn;
 			$scope.entitlementLevel = level;
+		};
+
+		$scope.addRandomTile = function() {
+			var position = $scope.tilePosition || 0;
+
+			var rand = parseInt((Math.random() * 10).toString().charAt(0), 10);
+			var tile = angular.copy($scope.tiles)[rand];
+
+			tile.justAdded = true;
+
+			$scope.tiles.splice(position, 0, tile);
+
+			$timeout(function(){
+				tile.justAdded = false;
+				$scope.$apply();
+			}, 3000);
+		};
+
+		$scope.logIndex = function(e) {
+			console.log(e, this.$index);
 		};
 	}
 ]);

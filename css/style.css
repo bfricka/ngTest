@@ -137,3 +137,46 @@
 .flyout-footer p {
 	margin: 0;
 }
+
+.navbar-form {
+	margin-left: 10px;
+	float: left;
+	color: #eee;
+}
+
+.navbar-form span {
+	display: inline-block;
+	vertical-align: middle;
+	padding-top: 6px;
+	margin-right: 5px;
+}
+
+.navbar-form button.btn {
+	margin: 5px 5px 0 0;
+}
+
+.just-added {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 1;
+	border-radius: 3px;
+	background: rgba(0, 0, 0, 0.7);
+	color: #FFF;
+	text-align: center;
+}
+
+.just-added-wrapper {
+	display: table;
+	height: 100%;
+	width: 100%;
+}
+
+.just-added-wrapper span {
+	display: table-cell;
+	font-size: 20px;
+	font-weight: bold;
+	vertical-align: middle;
+}
