@@ -7,11 +7,12 @@ UverseNg.controller('TileCtrl', [
 	, 'TileResource'
 
 	, function($scope, $timeout, TileResource) {
-		$scope.currentPage = 0;
+		$scope.maxSize = 4;
 		$scope.perPage = 4;
-		$scope.pages = 0;
-		$scope.entitlementLevel = null;
+		$scope.numPages = 0;
 		$scope.signedIn = false;
+		$scope.currentPage = 1;
+		$scope.entitlementLevel = null;
 
 		var getEntitlementNum = function(str) {
 			return parseInt(str.replace(/[^\d]+/, ''), 10) || 0;
@@ -37,8 +38,12 @@ UverseNg.controller('TileCtrl', [
 			$scope.$watch(function(){
 				return $scope.tiles.length;
 			}, function(length){
-				$scope.pages = Math.ceil($scope.tiles.length / $scope.perPage);
+				$scope.numPages = Math.ceil($scope.tiles.length / $scope.perPage);
 			});
+		};
+
+		$scope.startFrom = function() {
+			return ($scope.currentPage - 1) * $scope.perPage;
 		};
 
 		var res = TileResource.get(1).then(function(data) {

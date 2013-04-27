@@ -2,22 +2,22 @@
 
 // Create a service for affect (pseudo data-handler)
 UverseNg.factory('TileResource', [
-	'$q'
-	, '$timeout'
+    '$q'
+  , '$timeout'
 
-	,	function($q, $timeout){
-		var TileResource = function(){};
+  , function($q, $timeout){
+    var TileResource = function(){};
 
-		TileResource.get = function(delay) {
-			var mockResource = $q.defer();
+    TileResource.get = function(delay) {
+      var mockResource = $q.defer();
 
-			$timeout(function(){
-				mockResource.resolve(tiles);
-			}, delay || 500);
+      $timeout(function(){
+        mockResource.resolve(tiles);
+      }, delay || 500);
 
-			return mockResource.promise;
-		};
+      return mockResource.promise;
+    };
 
-		return TileResource;
-	}
+    return TileResource;
+  }
 ]);

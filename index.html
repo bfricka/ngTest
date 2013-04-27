@@ -21,9 +21,21 @@
     <![endif]-->
 
     <!-- This code is taken from http://twitter.github.com/bootstrap/examples/hero.html -->
+    <script type="text/ng-template" id="pagination.html">
+      <div class="pagination">
+        <ul>
+          <li ng-repeat="page in pages" ng-class="{ active: page.active, disabled: page.disabled }">
+            <a ng-click="selectPage(page.number)">{{page.text}}</a>
+          </li>
+        </ul>
+      </div>
+    </script>
 
     <script type="text/ng-template" id="flyout.html">
-      <article class="flyout ng-cloak" fade-show="tile.flyoutVisible" duration="300">
+      <article
+        class="flyout ng-cloak"
+        fade-show="tile.flyoutVisible"
+        duration="300">
         <h2 class="flyout-title" ng-bind="tile.title"></h2>
         <p class="flyout-body clearfix">
           <span class="left-body">
@@ -89,7 +101,7 @@
     <div class="container">
 
       <div class="row tile-row">
-        <div class="span4 tile ng-cloak" ng-repeat="tile in tiles | filter: searchTiles | startFrom: currentPage * perPage | limitTo: perPage" ng-click="tile.flyoutVisible = !tile.flyoutVisible;">
+        <div class="span4 tile ng-cloak" ng-repeat="tile in tiles | filter: searchTiles | startFrom: startFrom() | limitTo: perPage" ng-click="tile.flyoutVisible = !tile.flyoutVisible;">
           <div class="just-added" fade-show="tile.justAdded" duration="350">
             <div class="just-added-wrapper">
               <span>NEW TILE!</span>
@@ -106,20 +118,27 @@
         </div>
       </div>
 
-      <div class="btn-group">
+      <!-- <div class="btn-group">
         <button class="btn"
           ng-click="currentPage = currentPage - 1"
           ng-disabled="currentPage == 0">Prev</button>
 
         <button class="btn"
           ng-class="{'active': currentPage == $index }"
-          ng-repeat="page in pages"
+          ng-repeat="page in numPages"
           ng-bind="$index + 1"></button>
 
         <button class="btn"
           ng-click="currentPage = currentPage + 1"
-          ng-disabled="currentPage == pages - 1">Next</button>
-      </div>
+          ng-disabled="currentPage == numPages - 1">Next</button>
+      </div> -->
+
+      <pagination
+        max-size="maxSize"
+        prev-text="&laquo;"
+        next-text="&raquo;"
+        num-pages="numPages"
+        current-page="currentPage"></pagination>
 
     </div> <!-- /container -->
 
@@ -127,6 +146,7 @@
     <script src="js/tiles.js"></script>
 
     <!-- App Files -->
+    <script src="js/modules/paginate.js"></script>
     <script src="js/app.js"></script>
     <script src="js/services/TileResource.js"></script>
     <script src="js/directives/tileFlyout.js"></script>
