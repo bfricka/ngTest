@@ -7,10 +7,10 @@ var tiles = [
     , 'description': 'Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.'
     , 'startTime': 1366873200000
     , 'endTime': 1366876800000
-    , 'channelName': 'Starz'
+    , 'channelName': 'HBO'
     , 'genres': ['Action - Adventure', 'Drama', 'Entertainment - Lifestyle']
     , 'releaseYear': 2012
-    , 'entitlementLevels': ['U450', 'Starz']
+    , 'entitlementLevels': ['U450', 'HBO']
     , 'rating': 'TV-MA'
   }
   , {

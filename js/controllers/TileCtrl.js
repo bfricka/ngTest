@@ -16,6 +16,15 @@ angular
       $scope.signedIn = false;
       $scope.currentPage = 1;
       $scope.entitlementLevel = null;
+      $scope.filters = [
+          { 'value': '', 'text': 'None'}
+        , { 'value': 'TV-MA', 'text': 'TV-MA' }
+        , { 'value': 'TV-14', 'text': 'TV-14' }
+        , { 'value': 'clip', 'text': 'Clips Only' }
+        , { 'value': 'trailer', 'text': 'Trailers Only' }
+      ];
+
+      $scope.tileFilter = $scope.filters[0].value;
 
       $scope.startFrom = function() {
         return ($scope.currentPage - 1) * $scope.perPage;

@@ -120,9 +120,6 @@
               <span>to</span>
               <input type="number" ng-model="tilePosition" placeholder="Index position">
             </div>
-            <div class="navbar-form">
-              <input type="text" placeholder="Search" ng-model="searchTiles">
-            </div>
           </div><!--/.nav-collapse -->
         </div>
       </div>
@@ -131,7 +128,7 @@
     <div class="container">
 
       <div class="row tile-row">
-        <tile ng-repeat="tile in tiles | filter: searchTiles | startFrom: startFrom() | limitTo: perPage"></tile>
+        <tile ng-repeat="tile in tiles | filter: searchTiles | filter: tileFilter | startFrom: startFrom() | limitTo: perPage"></tile>
       </div>
 
       <pagination
@@ -143,6 +140,27 @@
         on-select-page="pageFromIsolate(page)"></pagination>
 
     </div> <!-- /container -->
+
+    <div class="navbar navbar-fixed-bottom">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="#">Uverse</a>
+          <div class="nav-collapse collapse">
+            <div class="navbar-form">
+              <label for="tileFilters">Filter tiles:
+                <select
+                  ng-model="tileFilter"
+                  ng-options="filter.value as filter.text for filter in filters"
+                  ng-selected="filter"></select>
+              </label>
+            </div>
+            <div class="navbar-form">
+              <input type="text" placeholder="Search tiles" ng-model="searchTiles">
+            </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
 
     <!-- Include tile mocks -->
     <script src="js/tiles.js"></script>
