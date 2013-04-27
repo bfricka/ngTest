@@ -2,7 +2,8 @@
 
 UverseNg.filter('startFrom', function(){
   return function(input, start) {
-    if (input != null && typeof start === 'number') {
+    start = +start;
+    if (input != null && !isNaN(start)) {
       return input.slice(start);
     }
   };
