@@ -62,10 +62,12 @@ UverseNg.controller('TileCtrl', [
     $scope.addRandomTile = function() {
       var position = $scope.tilePosition || 0;
 
-      var rand = parseInt((Math.random() * 10).toString().charAt(0), 10);
+      var rand = getRandom();
       var tile = angular.copy($scope.tiles)[rand];
 
       tile.justAdded = true;
+      // Delete hashKey so we can add duplicates for the sake of example
+      delete tile.$$hashKey;
 
       if (position === -1) {
         $scope.tiles.push(tile);
@@ -100,6 +102,10 @@ UverseNg.controller('TileCtrl', [
       }, function(length){
         $scope.numPages = Math.ceil($scope.tiles.length / $scope.perPage);
       });
+    }
+
+    function getRandom() {
+      return Math.floor(Math.random() * ($scope.tiles.length - 1));
     }
   }
 ]);
