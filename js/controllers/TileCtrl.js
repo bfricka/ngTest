@@ -7,15 +7,14 @@ angular
   .controller('TileCtrl', [
       '$scope'
     , '$timeout'
+    , 'Entitlement'
     , 'TileResource'
 
-    , function($scope, $timeout, TileResource) {
+    , function($scope, $timeout, Entitlement, TileResource) {
       $scope.maxSize = 4;
       $scope.perPage = 4;
       $scope.numPages = 0;
-      $scope.signedIn = false;
       $scope.currentPage = 1;
-      $scope.entitlementLevel = null;
       $scope.filters = [
           { 'value': '', 'text': 'None'}
         , { 'value': 'TV-MA', 'text': 'TV-MA' }
@@ -49,14 +48,6 @@ angular
         var end = new Date(this.tile.endTime);
 
         return start.diff(end, 'minute');
-      };
-
-      // Pseudo-authentication
-      $scope.authenticate = function(e, signedIn, level) {
-        e.preventDefault();
-
-        $scope.signedIn = signedIn;
-        $scope.entitlementLevel = level;
       };
 
       // Just copies a random tile from the current tiles and sends it to the
@@ -97,30 +88,8 @@ angular
 
       // Calculate entitlements
       $scope.isEntitled = function() {
-        var entitlements = this.tile.entitlementLevels;
-
-        // Quick check for clips
-        if (!entitlements.length) return true;
-
-        // Quick check for non-entitled
-        if (!$scope.entitlementLevel) return false;
-
-        for (var i = 0, len = entitlements.length; i < len; i++) {
-          if ($scope.entitlementLevel === entitlements[i]) return true;
-
-          var showLevelNum = getEntitlementNum(entitlements[i]);
-          var entitlementLevelNum = getEntitlementNum($scope.entitlementLevel);
-
-          if (entitlementLevelNum >= showLevelNum && showLevelNum !== 0) return true;
-        }
-
-        // Last fall-through
-        return false;
+        return Entitlement.isEntitled(this.tile.entitlementLevels);
       };
-
-      function getEntitlementNum(str) {
-        return parseInt(str.replace(/[^\d]+/, ''), 10) || 0;
-      }
 
       function watchTiles() {
         if (!$scope.tiles) return;
