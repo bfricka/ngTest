@@ -2,114 +2,100 @@
 
 // Define a tile controller and inject its dependencies
 UverseNg.controller('TileCtrl', [
-	'$scope'
-	,'$timeout'
-	, 'TileResource'
+    '$scope'
+  , '$timeout'
+  , 'TileResource'
 
-	, function($scope, $timeout, TileResource) {
-		$scope.maxSize = 4;
-		$scope.perPage = 4;
-		$scope.numPages = 0;
-		$scope.signedIn = false;
-		$scope.currentPage = 1;
-		$scope.entitlementLevel = null;
+  , function($scope, $timeout, TileResource) {
+    $scope.maxSize = 4;
+    $scope.perPage = 4;
+    $scope.numPages = 0;
+    $scope.signedIn = false;
+    $scope.currentPage = 1;
+    $scope.entitlementLevel = null;
 
-		var getEntitlementNum = function(str) {
-			return parseInt(str.replace(/[^\d]+/, ''), 10) || 0;
-		};
+    $scope.startFrom = function() {
+      return ($scope.currentPage - 1) * $scope.perPage;
+    };
 
-		$scope.pizzles = function() {
-			var tiles = $scope.tiles
-			, pages = []
-			, prev = 0
-			, per = $scope.perPage;
+    var res = TileResource.get(1).then(function(data) {
+      $scope.tiles = data;
+    });
 
-			for (var i = per, len = tiles.length + 1; i < len; i += $scope.perPage) {
-				pages.push(tiles.slice(prev, i));
-				prev += $scope.perPage;
-			}
+    res.then(function(){
+      watchTiles();
+    });
 
-			return pages;
-		};
+    $scope.tileBg = function() {
+      return 'url('+this.tile.imgUrl+')';
+    };
 
-		var watchTiles = function(){
-			if (!$scope.tiles) return;
+    $scope.isEntitled = function() {
+      var entitlements = this.tile.entitlementLevels;
 
-			$scope.$watch(function(){
-				return $scope.tiles.length;
-			}, function(length){
-				$scope.numPages = Math.ceil($scope.tiles.length / $scope.perPage);
-			});
-		};
+      // Quick check for clips
+      if (!entitlements.length) return true;
 
-		$scope.startFrom = function() {
-			return ($scope.currentPage - 1) * $scope.perPage;
-		};
+      // Quick check for non-entitled
+      if (!$scope.entitlementLevel) return false;
 
-		var res = TileResource.get(1).then(function(data) {
-			$scope.tiles = data;
-		});
+      for (var i = 0, len = entitlements.length; i < len; i++) {
+        if ($scope.entitlementLevel === entitlements[i]) return true;
 
-		res.then(function(){
-			watchTiles();
-		});
+        var showLevelNum = getEntitlementNum(entitlements[i]);
+        var entitlementLevelNum = getEntitlementNum($scope.entitlementLevel);
 
-		$scope.tileBg = function() {
-			return 'url('+this.tile.imgUrl+')';
-		};
+        if (entitlementLevelNum >= showLevelNum && showLevelNum !== 0) return true;
+      }
 
-		$scope.isEntitled = function() {
-			var entitlements = this.tile.entitlementLevels;
+      // Last fall-through
+      return false;
+    };
 
-			// Quick check for clips
-			if (!entitlements.length) return true;
+    $scope.authenticate = function(e, signedIn, level) {
+      e.preventDefault();
 
-			// Quick check for non-entitled
-			if (!$scope.entitlementLevel) return false;
+      $scope.signedIn = signedIn;
+      $scope.entitlementLevel = level;
+    };
 
-			for (var i = 0, len = entitlements.length; i < len; i++) {
-				if ($scope.entitlementLevel === entitlements[i]) return true;
+    $scope.addRandomTile = function() {
+      var position = $scope.tilePosition || 0;
 
-				var showLevelNum = getEntitlementNum(entitlements[i]);
-				var entitlementLevelNum = getEntitlementNum($scope.entitlementLevel);
+      var rand = parseInt((Math.random() * 10).toString().charAt(0), 10);
+      var tile = angular.copy($scope.tiles)[rand];
 
-				if (entitlementLevelNum >= showLevelNum && showLevelNum !== 0) return true;
-			}
+      tile.justAdded = true;
 
-			// Last fall-through
-			return false;
-		};
+      if (position === -1) {
+        $scope.tiles.push(tile);
+      } else {
+        position = position < -1 ? position + 1 : position;
+        $scope.tiles.splice(position, 0, tile);
+      }
 
-		$scope.authenticate = function(e, signedIn, level) {
-			e.preventDefault();
+      $timeout(function(){
+        tile.justAdded = false;
+        $scope.$apply();
+      }, 3000);
+    };
 
-			$scope.signedIn = signedIn;
-			$scope.entitlementLevel = level;
-		};
+    $scope.logIndex = function(e) {
+      console.log(e, this.$index);
+    };
 
-		$scope.addRandomTile = function() {
-			var position = $scope.tilePosition || 0;
+    function getEntitlementNum(str) {
+      return parseInt(str.replace(/[^\d]+/, ''), 10) || 0;
+    }
 
-			var rand = parseInt((Math.random() * 10).toString().charAt(0), 10);
-			var tile = angular.copy($scope.tiles)[rand];
+    function watchTiles() {
+      if (!$scope.tiles) return;
 
-			tile.justAdded = true;
-
-			if (position === -1) {
-				$scope.tiles.push(tile);
-			} else {
-				position = position < -1 ? position + 1 : position;
-				$scope.tiles.splice(position, 0, tile);
-			}
-
-			$timeout(function(){
-				tile.justAdded = false;
-				$scope.$apply();
-			}, 3000);
-		};
-
-		$scope.logIndex = function(e) {
-			console.log(e, this.$index);
-		};
-	}
+      $scope.$watch(function(){
+        return $scope.tiles.length;
+      }, function(length){
+        $scope.numPages = Math.ceil($scope.tiles.length / $scope.perPage);
+      });
+    }
+  }
 ]);
