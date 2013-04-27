@@ -22,7 +22,7 @@ UverseNg.directive('fadeShow', function(){
       switch (direction) {
         case true:
           elem.setStyles({
-            'opacity': 0
+              'opacity': 0
             , 'display': 'block'
           });
 

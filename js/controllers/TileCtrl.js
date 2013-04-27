@@ -84,6 +84,10 @@ UverseNg.controller('TileCtrl', [
       console.log(e, this.$index);
     };
 
+    $scope.pageFromIsolate = function(page) {
+      console.log(page);
+    };
+
     function getEntitlementNum(str) {
       return parseInt(str.replace(/[^\d]+/, ''), 10) || 0;
     }

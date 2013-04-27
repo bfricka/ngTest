@@ -1,3 +1,18 @@
+// Demonstrates a completely isolate-scoped module directive that communicates with
+// a controller scope through specifically defined 'scope' pathways (see below)
+//
+// '=' is a 2-way binding between parent/isolate for that attr / prop
+// e.g. function myCtrl($scope) { $scope.maxSize = 1; }
+// function direction(scope) { scope.maxSize === 1 } // => true
+//
+// '&' allows an expression to be executed on the parent scope, in the context
+// of the isolate scope. (see onSelectPage and how it's invoked in the directive
+// invokation in index.html)
+//
+// For more info see: http://docs.angularjs.org/guide/directive
+// Directives are by far the most complex thing to master in AngularJS
+// but they are also arguably the most powerful and flexible.
+
 angular
   .module('uverse.paginate', [])
 
@@ -15,6 +30,7 @@ angular
         , restrict    : 'EA'
         , templateUrl : 'pagination.html'
 
+        // Specifically defined scope bindings
         , scope: {
             maxSize      : '='
           , numPages     : '='
@@ -51,9 +67,9 @@ angular
             //set the default maxSize to numPages
             var maxSize = (scope.maxSize && scope.maxSize < scope.numPages)
               ? scope.maxSize
-              : scope.numPages
+              : scope.numPages;
 
-              , startPage = scope.currentPage - Math.floor(maxSize / 2);
+            var startPage = scope.currentPage - Math.floor(maxSize / 2);
 
             //adjust the startPage within boundary
             if (startPage < 1)
@@ -96,6 +112,7 @@ angular
           scope.selectPage = function(page) {
             if ( !scope.isActive(page) && page > 0 && page <= scope.numPages) {
               scope.currentPage = page;
+              // Execute any expression bound to onSelectPage
               scope.onSelectPage({ page: page });
             }
           };
