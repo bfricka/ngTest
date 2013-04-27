@@ -13,7 +13,9 @@
     <link rel="stylesheet" href="css/style.css" media="all">
 
     <script src="js/libs/angular.js"></script>
-    <script src="js/libs/Moo.js"></script>
+    <script src="js/libs/moo.js"></script>
+    <script src="js/libs/moo-more.js"></script>
+
   </head>
   <body ng-app="UverseApp" ng-controller="TileCtrl">
     <!--[if lt IE 7]>
@@ -54,19 +56,27 @@
     <script type="text/ng-template" id="flyout.html">
       <article
         class="flyout ng-cloak"
+        ng-class="{'authenticate': !isEntitled()}"
         fade-show="tile.flyoutVisible"
-        duration="300">
+        duration="200">
         <h2 class="flyout-title" ng-bind="tile.title"></h2>
         <p class="flyout-body clearfix">
           <span class="left-body">
-            <img class="flyout-img" src="http://lorempixel.com/140/75" alt="">
-            <button class="btn" ng-bind="tile.watchText"></button>
+            <img class="flyout-img" src="http://lorempixel.com/140/75" alt="{{tile.title}}">
+            <button class="btn btn-primary" ng-bind="tile.watchText"></button>
           </span>
           <span class="right-body">
-            <span class="description" ng-bind="tile.description"></span>
-            <!-- Insert length in minutes -->
-            <!-- Insert genres -->
-            <!-- Insert release year -->
+            <!-- Straight bind (expression) -->
+            <span class="flyout-meta description" ng-bind="tile.description"></span>
+
+            <!-- Bind template syntax with default -->
+            <span class="flyout-meta released" ng-bind-template="Released {{tile.releaseYear}}">Default!</span>
+
+            <!-- Inline syntax -->
+            <span class="flyout-meta duration">{{getDurationInMinutes()}} minutes</span>
+            <span class="flyout-meta genres clearfix">
+            <span class="genre" ng-repeat="genre in tile.genres">{{genre}}<span ng-hide="$last">,&nbsp;</span></span>
+            </span>
           </span>
         </p>
         <footer class="flyout-footer" ng-hide="isEntitled()">

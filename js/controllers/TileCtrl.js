@@ -35,6 +35,13 @@ angular
         return 'url('+this.tile.imgUrl+')';
       };
 
+      $scope.getDurationInMinutes = function() {
+        var start = new Date(this.tile.startTime);
+        var end = new Date(this.tile.endTime);
+
+        return start.diff(end, 'minute');
+      };
+
       // Pseudo-authentication
       $scope.authenticate = function(e, signedIn, level) {
         e.preventDefault();
