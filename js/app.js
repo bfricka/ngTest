@@ -1,7 +1,7 @@
 /* global angular */
 
 // Define the app and any global dependencies (empty in this case)
-var UverseNg = angular.module('UverseApp', ['uverse.paginate']);
+var UverseNg = angular.module('UverseApp', ['uverse.paginate', 'uverse.tile']);
 
 // A helper so angular plays nice with Moo (only affects $, not $$)
 var $moo = function(element) {

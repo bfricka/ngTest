@@ -7,9 +7,5 @@ UverseNg.directive('flyout', function(){
     , replace: true
     , transclude: true
     , templateUrl: 'flyout.html'
-
-    , link: function(scope, elem, attrs, ngModel) {
-
-    }
   };
 });

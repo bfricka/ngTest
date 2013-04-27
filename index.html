@@ -31,6 +31,26 @@
       </div>
     </script>
 
+    <script type="text/ng-template" id="tile.html">
+      <section
+        class="span4 tile ng-cloak"
+        ng-click="tile.flyoutVisible = !tile.flyoutVisible;">
+        <div class="just-added" fade-show="tile.justAdded" duration="350">
+          <div class="just-added-wrapper">
+            <span>NEW TILE!</span>
+          </div>
+        </div>
+        <figure class="tile-art" ng-style="{backgroundImage: tileBg()}" ng-click="logIndex($event)"></figure>
+        <figcaption class="meta clearfix">
+          <span ng-bind='tile.genres[0]'></span>
+          <span ng-bind='tile.type'></span>
+          <a class="channel-name" href="http://google.com" ng-bind="tile.channelName"></a>
+          <span ng-bind="tile.rating"></span>
+        </figcaption>
+        <flyout ng-model="tile"></flyout>
+      </section>
+    </script>
+
     <script type="text/ng-template" id="flyout.html">
       <article
         class="flyout ng-cloak"
@@ -101,21 +121,7 @@
     <div class="container">
 
       <div class="row tile-row">
-        <div class="span4 tile ng-cloak" ng-repeat="tile in tiles | filter: searchTiles | startFrom: startFrom() | limitTo: perPage" ng-click="tile.flyoutVisible = !tile.flyoutVisible;">
-          <div class="just-added" fade-show="tile.justAdded" duration="350">
-            <div class="just-added-wrapper">
-              <span>NEW TILE!</span>
-            </div>
-          </div>
-          <figure class="tile-art" ng-style="{backgroundImage: tileBg()}" ng-click="logIndex($event)"></figure>
-          <figcaption class="meta clearfix">
-            <span ng-bind='tile.genres[0]'></span>
-            <span ng-bind='tile.type'></span>
-            <a class="channel-name" href="http://google.com" ng-bind="tile.channelName"></a>
-            <span ng-bind="tile.rating"></span>
-          </figcaption>
-          <flyout ng-model="tile"></flyout>
-        </div>
+        <tile ng-repeat="tile in tiles | filter: searchTiles | startFrom: startFrom() | limitTo: perPage"></tile>
       </div>
 
       <pagination
