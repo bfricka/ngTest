@@ -131,8 +131,7 @@
         <tile ng-repeat="tile in tiles | filter: searchTiles | filter: tileFilter | startFrom: startFrom() | limitTo: perPage"></tile>
       </div>
 
-      <pagination
-        max-size="maxSize"
+      <pagination max-size="maxSize"
         prev-text="&laquo;"
         next-text="&raquo;"
         num-pages="numPages"
@@ -148,8 +147,7 @@
           <div class="nav-collapse collapse">
             <div class="navbar-form">
               <label for="tileFilters">Filter tiles:
-                <select
-                  ng-model="tileFilter"
+                <select ng-model="tileFilter"
                   ng-options="filter.value as filter.text for filter in filters"
                   ng-selected="filter"></select>
               </label>
